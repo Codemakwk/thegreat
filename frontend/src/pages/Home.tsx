@@ -190,7 +190,7 @@ export const HomePage: React.FC = () => {
           
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link to="/register">
-              <Button size="lg" className="bg-white text-black hover:bg-surface-50 shadow-2xl px-10 py-6 text-lg font-bold transition-all transform hover:scale-105">
+              <Button size="lg" className="bg-primary-500 text-white hover:bg-primary-400 shadow-2xl px-10 py-6 text-lg font-bold transition-all transform hover:scale-105 border-none">
                 Create Free Account <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
             </Link>
