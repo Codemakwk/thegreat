@@ -12,7 +12,7 @@ const envSchema = z.object({
   STRIPE_WEBHOOK_SECRET: z.string(),
   SMTP_HOST: z.string().default('smtp.gmail.com'),
   SMTP_PORT: z.coerce.number().default(587),
-  SMTP_USER: z.string().email().optional(),
+  SMTP_USER: z.string().optional(),
   SMTP_PASS: z.string().optional(),
   CLOUDINARY_CLOUD_NAME: z.string().optional(),
   CLOUDINARY_API_KEY: z.string().optional(),
