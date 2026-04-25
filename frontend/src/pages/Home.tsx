@@ -169,17 +169,32 @@ export const HomePage: React.FC = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="bg-gradient-to-r from-primary-600 to-primary-800 dark:from-primary-700 dark:to-primary-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-16 text-center">
-          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">Ready to Start Shopping?</h2>
-          <p className="text-primary-100 mb-8 max-w-xl mx-auto">
-            Join thousands of happy customers. Use code <span className="font-bold">WELCOME15</span> for 15% off your first order!
+      <section className="relative py-20 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-tr from-primary-700 to-indigo-900" />
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20" />
+        
+        <div className="relative max-w-4xl mx-auto px-4 text-center">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-white text-xs font-semibold uppercase tracking-wider mb-8 backdrop-blur-md border border-white/20">
+            <Sparkles className="w-4 h-4" /> Limited Time Offer
+          </div>
+          
+          <h2 className="text-4xl sm:text-5xl font-black text-white mb-6 tracking-tight">
+            Ready to Start Shopping?
+          </h2>
+          
+          <p className="text-xl text-primary-50 mb-10 leading-relaxed max-w-2xl mx-auto opacity-90">
+            Join thousands of happy customers. Use code 
+            <span className="mx-2 px-3 py-1 bg-white text-primary-700 font-bold rounded-lg shadow-sm">WELCOME15</span> 
+            for 15% off your first order!
           </p>
-          <Link to="/register">
-            <Button size="lg" className="bg-white text-primary-700 hover:bg-surface-100 shadow-xl">
-              Create Free Account <ArrowRight className="w-5 h-5" />
-            </Button>
-          </Link>
+          
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Link to="/register">
+              <Button size="lg" className="bg-white text-black hover:bg-surface-50 shadow-2xl px-10 py-6 text-lg font-bold transition-all transform hover:scale-105">
+                Create Free Account <ArrowRight className="w-5 h-5 ml-2" />
+              </Button>
+            </Link>
+          </div>
         </div>
       </section>
     </div>
