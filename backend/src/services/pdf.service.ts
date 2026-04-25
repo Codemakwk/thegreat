@@ -1,6 +1,11 @@
 import PDFDocument from 'pdfkit';
 import { Response } from 'express';
-import { formatPrice, formatDate } from '../../../frontend/src/utils/helpers'; // Reuse formatters
+export const formatPrice = (amount: number) => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  }).format(amount);
+};
 
 export const generateReceiptPDF = async (order: any, res: Response) => {
   const doc = new PDFDocument({ margin: 50 });
