@@ -2,6 +2,12 @@
 
 A full-stack, production-ready e-commerce application built with modern technologies.
 
+## 🌐 Live Demo
+
+- **Frontend (Website):** [https://thegreat-three.vercel.app](https://thegreat-three.vercel.app)
+- **Backend (API):** [https://thegreat-uf6z.onrender.com](https://thegreat-uf6z.onrender.com)
+
+
 ## ⚡ Tech Stack
 
 | Layer | Technology |
