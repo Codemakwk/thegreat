@@ -23,7 +23,7 @@ export const AuthCallbackPage: React.FC = () => {
         // Set the token temporarily to fetch user profile
         // The setAuth will handle the actual storage after we get user data
         const response = await authApi.getMeWithToken(token);
-        const { user } = response.data.data;
+        const user = response.data.data;
         
         // We don't have the refresh token in the URL for security, 
         // it's already set in the HTTP-only cookie by the server.
