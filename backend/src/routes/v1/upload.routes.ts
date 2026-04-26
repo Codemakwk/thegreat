@@ -5,6 +5,7 @@ import cloudinary from '../../config/cloudinary';
 import path from 'path';
 import { authenticate } from '../../middleware/auth';
 import { authorize } from '../../middleware/authorize';
+import { ApiError } from '../../utils/apiError';
 import * as uploadController from '../../controllers/upload.controller';
 
 const router = Router();
@@ -14,7 +15,7 @@ const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
     folder: 'thegreat_products',
-    allowed_formats: ['jpeg', 'jpg', 'png', 'webp', 'gif'],
+    // Removed allowed_formats constraint to accept any image type
     // transformation: [{ width: 800, height: 800, crop: 'limit' }], // Optional optimizations
   } as any,
 });
@@ -22,6 +23,14 @@ const storage = new CloudinaryStorage({
 const upload = multer({
   storage,
   limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
+  fileFilter: (req, file, cb) => {
+    const allowedMimes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+    if (allowedMimes.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(ApiError.badRequest('Invalid file type. Only JPEG, PNG, WebP, and GIF images are allowed.'));
+    }
+  },
 });
 
 // Routes

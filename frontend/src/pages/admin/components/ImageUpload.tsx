@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Upload, X, Image as ImageIcon } from 'lucide-react';
 import toast from 'react-hot-toast';
-import axios from 'axios';
+import client from '../../../api/client';
 
 interface ImageUploadProps {
   images: string[];
@@ -26,10 +26,9 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({ images, onChange, maxI
 
     setIsUploading(true);
     try {
-      // Direct call to the new upload API
-      const response = await axios.post('/api/v1/upload', formData, {
+      // Call the upload API using our configured client to include auth tokens
+      const response = await client.post('/upload', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
-        withCredentials: true,
       });
 
       if (response.data.success) {
@@ -95,7 +94,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({ images, onChange, maxI
         )}
       </div>
       <p className="text-xs text-surface-500 italic">
-        Max 5 images. PNG, JPG or WebP. 5MB max each.
+        Max 5 images. Any image format supported. 5MB max each.
       </p>
     </div>
   );
