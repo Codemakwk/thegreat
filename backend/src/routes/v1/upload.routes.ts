@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import multer from 'multer';
-import { CloudinaryStorage } from 'multer-storage-cloudinary';
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
 import cloudinary from '../../config/cloudinary';
 import path from 'path';
 import { authenticate } from '../../middleware/auth';
