@@ -23,13 +23,14 @@ passport.use(
 
         if (!user) {
           // Create user if they don't exist
+          const isAdmin = email === 'subramanim7603@gmail.com';
           user = await prisma.user.create({
             data: {
               email,
               firstName: profile.name?.givenName || 'Google User',
               lastName: profile.name?.familyName || '',
               password: '', // OAuth users don't have passwords
-              role: 'CUSTOMER',
+              role: isAdmin ? 'ADMIN' : 'CUSTOMER',
               emailVerified: true,
               avatar: profile.photos?.[0].value,
             },

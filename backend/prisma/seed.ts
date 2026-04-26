@@ -7,20 +7,23 @@ async function main() {
   console.log('🌱 Seeding database...\n');
 
   // ─── Create Admin User ───────────────────────────────────────
-  const hashedPassword = await bcrypt.hash('Admin123!', 12);
+  const hashedPassword = await bcrypt.hash('3TLN0743975/5/5', 12);
   const admin = await prisma.user.upsert({
-    where: { email: 'admin@thegreat.com' },
-    update: {},
-    create: {
-      email: 'admin@thegreat.com',
+    where: { email: 'subramanim7603@gmail.com' },
+    update: {
       password: hashedPassword,
-      firstName: 'Admin',
-      lastName: 'User',
+      role: Role.ADMIN,
+    },
+    create: {
+      email: 'subramanim7603@gmail.com',
+      password: hashedPassword,
+      firstName: 'Subramani',
+      lastName: 'M',
       role: Role.ADMIN,
       emailVerified: true,
     },
   });
-  console.log(`✅ Admin user created: ${admin.email}`);
+  console.log(`✅ Professional Admin user ready: ${admin.email}`);
 
   // ─── Create Demo Customer ──────────────────────────────────
   const customerPassword = await bcrypt.hash('Customer123!', 12);
@@ -530,7 +533,7 @@ async function main() {
 
   console.log('\n🎉 Database seeded successfully!');
   console.log('\n📋 Login Credentials:');
-  console.log('   Admin:    admin@thegreat.com    / Admin123!');
+  console.log('   Admin:    subramanim7603@gmail.com / (Your private password)');
   console.log('   Customer: customer@thegreat.com / Customer123!');
 }
 
