@@ -95,7 +95,7 @@ export const ProductDetail: React.FC = () => {
         <div>
           <div className="relative rounded-2xl overflow-hidden bg-surface-100 dark:bg-surface-800 mb-4">
             <img
-              src={product.images[selectedImage]?.url || 'https://via.placeholder.com/600'}
+              src={product.images[selectedImage]?.url || 'https://placehold.co/600x600/1e293b/94a3b8?text=No+Image'}
               alt={product.name}
               className="w-full aspect-square object-cover"
             />

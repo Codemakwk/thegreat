@@ -204,7 +204,7 @@ export const ProductListing: React.FC = () => {
                   >
                     <div className="relative overflow-hidden">
                       <img
-                        src={product.images[0]?.url || 'https://via.placeholder.com/400'}
+                        src={product.images[0]?.url || 'https://placehold.co/400x400/1e293b/94a3b8?text=No+Image'}
                         alt={product.name}
                         className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-500"
                       />

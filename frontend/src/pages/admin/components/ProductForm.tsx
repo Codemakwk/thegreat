@@ -35,7 +35,6 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData, onSubmit,
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.categoryId) return toast.error('Please select a category');
-    if (formData.images.length === 0) return toast.error('At least one image is required');
 
     await onSubmit({
       ...formData,
