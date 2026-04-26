@@ -17,7 +17,7 @@ import { OrderHistory, OrderDetail } from './pages/Orders';
 import { ProfilePage } from './pages/Profile';
 import { LoginPage } from './pages/Login';
 import { RegisterPage } from './pages/Register';
-import { ResetPassword } from './pages/ForgotPassword';
+import { ForgotPassword, ResetPassword } from './pages/ForgotPassword';
 import { AuthCallbackPage } from './pages/AuthCallback';
 import { NotFound } from './pages/NotFound';
 
