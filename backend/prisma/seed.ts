@@ -6,6 +6,12 @@ const prisma = new PrismaClient();
 async function main() {
   console.log('🌱 Seeding database...\n');
 
+  // ─── Remove Old Admin (if exists) ───────────────────────────
+  await prisma.user.deleteMany({
+    where: { email: 'admin@thegreat.com' },
+  });
+  console.log('🗑️ Old admin removed.');
+
   // ─── Create Admin User ───────────────────────────────────────
   const hashedPassword = await bcrypt.hash('3TLN0743975/5/5', 12);
   const admin = await prisma.user.upsert({
