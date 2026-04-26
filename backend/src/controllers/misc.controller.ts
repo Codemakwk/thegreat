@@ -6,7 +6,7 @@ import { asyncHandler } from '../utils/asyncHandler';
 /** POST /api/v1/reviews — Create a review */
 export const createReview = asyncHandler(async (req: Request, res: Response) => {
   const { productId, rating, title, comment } = req.body;
-  const userId = req.user!.userId;
+  const userId = req.userPayload!.userId;
 
   // Check if product exists
   const product = await prisma.product.findUnique({ where: { id: productId } });
@@ -69,7 +69,7 @@ export const getProductReviews = asyncHandler(async (req: Request, res: Response
 /** GET /api/v1/addresses */
 export const getAddresses = asyncHandler(async (req: Request, res: Response) => {
   const addresses = await prisma.address.findMany({
-    where: { userId: req.user!.userId },
+    where: { userId: req.userPayload!.userId },
     orderBy: { isDefault: 'desc' },
   });
   res.json({ success: true, data: addresses });
@@ -77,7 +77,7 @@ export const getAddresses = asyncHandler(async (req: Request, res: Response) => 
 
 /** POST /api/v1/addresses */
 export const createAddress = asyncHandler(async (req: Request, res: Response) => {
-  const userId = req.user!.userId;
+  const userId = req.userPayload!.userId;
 
   // If this is the default, remove default from others
   if (req.body.isDefault) {
@@ -97,7 +97,7 @@ export const createAddress = asyncHandler(async (req: Request, res: Response) =>
 /** PUT /api/v1/addresses/:id */
 export const updateAddress = asyncHandler(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const userId = req.user!.userId;
+  const userId = req.userPayload!.userId;
 
   const existing = await prisma.address.findFirst({ where: { id, userId } });
   if (!existing) throw ApiError.notFound('Address not found');
@@ -120,7 +120,7 @@ export const updateAddress = asyncHandler(async (req: Request, res: Response) =>
 /** DELETE /api/v1/addresses/:id */
 export const deleteAddress = asyncHandler(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const existing = await prisma.address.findFirst({ where: { id, userId: req.user!.userId } });
+  const existing = await prisma.address.findFirst({ where: { id, userId: req.userPayload!.userId } });
   if (!existing) throw ApiError.notFound('Address not found');
 
   await prisma.address.delete({ where: { id } });
@@ -134,7 +134,7 @@ export const updateProfile = asyncHandler(async (req: Request, res: Response) =>
   const { firstName, lastName, avatar } = req.body;
 
   const user = await prisma.user.update({
-    where: { id: req.user!.userId },
+    where: { id: req.userPayload!.userId },
     data: { firstName, lastName, avatar },
     select: {
       id: true,

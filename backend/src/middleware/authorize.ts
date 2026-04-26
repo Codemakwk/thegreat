@@ -7,11 +7,11 @@ import { ApiError } from '../utils/apiError';
  */
 export const authorize = (...roles: string[]) => {
   return (req: Request, _res: Response, next: NextFunction): void => {
-    if (!req.user) {
+    if (!req.userPayload) {
       return next(ApiError.unauthorized('Authentication required'));
     }
 
-    if (!roles.includes(req.user.role)) {
+    if (!roles.includes(req.userPayload.role)) {
       return next(
         ApiError.forbidden(`Access denied. Required role: ${roles.join(' or ')}`)
       );

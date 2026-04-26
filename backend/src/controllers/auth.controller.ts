@@ -102,9 +102,9 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
 
 /** POST /api/v1/auth/logout */
 export const logout = asyncHandler(async (req: Request, res: Response) => {
-  if (req.user) {
+  if (req.userPayload) {
     await prisma.user.update({
-      where: { id: req.user.userId },
+      where: { id: req.userPayload.userId },
       data: { refreshToken: null },
     });
   }
@@ -233,7 +233,7 @@ export const verifyEmail = asyncHandler(async (req: Request, res: Response) => {
 /** GET /api/v1/auth/me */
 export const getMe = asyncHandler(async (req: Request, res: Response) => {
   const user = await prisma.user.findUnique({
-    where: { id: req.user!.userId },
+    where: { id: req.userPayload!.userId },
     select: {
       id: true,
       email: true,
@@ -258,8 +258,17 @@ export const googleCallback = asyncHandler(async (req: Request, res: Response) =
   const user = req.user as any;
   if (!user) throw ApiError.unauthorized('Google authentication failed');
 
-  const { accessToken, refreshToken: newRefreshToken } = await generateTokens(user.id);
+  // Use existing token functions
+  const payload = { userId: user.id, email: user.email, role: user.role };
+  const accessToken = generateAccessToken(payload);
+  const newRefreshToken = generateRefreshToken(payload);
   
+  // Store refresh token in database (consistent with regular login)
+  await prisma.user.update({
+    where: { id: user.id },
+    data: { refreshToken: newRefreshToken },
+  });
+
   // Set refresh token in cookie
   res.cookie('refreshToken', newRefreshToken, {
     httpOnly: true,
@@ -268,7 +277,7 @@ export const googleCallback = asyncHandler(async (req: Request, res: Response) =
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
   });
 
-  // Redirect to frontend with access token in URL for initial storage
+  // Redirect to frontend with access token in URL
   const redirectUrl = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/auth/callback?token=${accessToken}`;
   res.redirect(redirectUrl);
 });

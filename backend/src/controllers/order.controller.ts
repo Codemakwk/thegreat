@@ -10,7 +10,7 @@ import { generateReceiptPDF } from '../services/pdf.service';
 /** POST /api/v1/orders/checkout — Create order from cart */
 export const checkout = asyncHandler(async (req: Request, res: Response) => {
   const { shippingAddressId, couponCode, notes } = req.body;
-  const userId = req.user!.userId;
+  const userId = req.userPayload!.userId;
 
   // Get cart with items
   const cart = await prisma.cart.findUnique({
@@ -156,7 +156,7 @@ export const checkout = asyncHandler(async (req: Request, res: Response) => {
 /** GET /api/v1/orders — Get user's orders */
 export const getOrders = asyncHandler(async (req: Request, res: Response) => {
   const orders = await prisma.order.findMany({
-    where: { userId: req.user!.userId },
+    where: { userId: req.userPayload!.userId },
     include: {
       items: {
         include: {
@@ -181,7 +181,7 @@ export const getOrderById = asyncHandler(async (req: Request, res: Response) => 
   const order = await prisma.order.findFirst({
     where: {
       id,
-      userId: req.user!.userId,
+      userId: req.userPayload!.userId,
     },
     include: {
       items: {
@@ -211,7 +211,7 @@ export const downloadReceipt = asyncHandler(async (req: Request, res: Response) 
   const order = await prisma.order.findFirst({
     where: {
       id,
-      userId: req.user!.userId,
+      userId: req.userPayload!.userId,
     },
     include: {
       items: {

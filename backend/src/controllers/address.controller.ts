@@ -6,7 +6,7 @@ import { asyncHandler } from '../utils/asyncHandler';
 /** GET /api/v1/addresses — Get all addresses for user */
 export const getAddresses = asyncHandler(async (req: Request, res: Response) => {
   const addresses = await prisma.address.findMany({
-    where: { userId: req.user!.userId },
+    where: { userId: req.userPayload!.userId },
     orderBy: { createdAt: 'desc' },
   });
 
@@ -20,14 +20,14 @@ export const createAddress = asyncHandler(async (req: Request, res: Response) =>
   if (isDefault) {
     // Unset current default
     await prisma.address.updateMany({
-      where: { userId: req.user!.userId, isDefault: true },
+      where: { userId: req.userPayload!.userId, isDefault: true },
       data: { isDefault: false },
     });
   }
 
   const address = await prisma.address.create({
     data: {
-      userId: req.user!.userId,
+      userId: req.userPayload!.userId,
       label: label || 'Home',
       firstName,
       lastName,
@@ -50,7 +50,7 @@ export const updateAddress = asyncHandler(async (req: Request, res: Response) =>
   const { isDefault, ...rest } = req.body;
 
   const existing = await prisma.address.findFirst({
-    where: { id, userId: req.user!.userId },
+    where: { id, userId: req.userPayload!.userId },
   });
 
   if (!existing) {
@@ -59,7 +59,7 @@ export const updateAddress = asyncHandler(async (req: Request, res: Response) =>
 
   if (isDefault) {
     await prisma.address.updateMany({
-      where: { userId: req.user!.userId, isDefault: true },
+      where: { userId: req.userPayload!.userId, isDefault: true },
       data: { isDefault: false },
     });
   }
@@ -77,7 +77,7 @@ export const deleteAddress = asyncHandler(async (req: Request, res: Response) =>
   const { id } = req.params;
 
   const existing = await prisma.address.findFirst({
-    where: { id, userId: req.user!.userId },
+    where: { id, userId: req.userPayload!.userId },
   });
 
   if (!existing) {

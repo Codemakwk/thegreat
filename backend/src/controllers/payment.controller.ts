@@ -12,7 +12,7 @@ export const createPaymentIntent = asyncHandler(async (req: Request, res: Respon
   const { orderId } = req.body;
 
   const order = await prisma.order.findFirst({
-    where: { id: orderId, userId: req.user!.userId },
+    where: { id: orderId, userId: req.userPayload!.userId },
   });
 
   if (!order) {
@@ -33,7 +33,7 @@ export const createPaymentIntent = asyncHandler(async (req: Request, res: Respon
     currency: 'usd',
     metadata: {
       orderId: order.id,
-      userId: req.user!.userId,
+      userId: req.userPayload!.userId,
     },
   });
 

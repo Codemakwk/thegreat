@@ -6,7 +6,7 @@ import { asyncHandler } from '../utils/asyncHandler';
 /** GET /api/v1/cart — Get user's cart */
 export const getCart = asyncHandler(async (req: Request, res: Response) => {
   let cart = await prisma.cart.findUnique({
-    where: { userId: req.user!.userId },
+    where: { userId: req.userPayload!.userId },
     include: {
       items: {
         include: {
@@ -24,7 +24,7 @@ export const getCart = asyncHandler(async (req: Request, res: Response) => {
   // Create cart if it doesn't exist
   if (!cart) {
     cart = await prisma.cart.create({
-      data: { userId: req.user!.userId },
+      data: { userId: req.userPayload!.userId },
       include: {
         items: {
           include: {
@@ -72,9 +72,9 @@ export const addToCart = asyncHandler(async (req: Request, res: Response) => {
   }
 
   // Get or create cart
-  let cart = await prisma.cart.findUnique({ where: { userId: req.user!.userId } });
+  let cart = await prisma.cart.findUnique({ where: { userId: req.userPayload!.userId } });
   if (!cart) {
-    cart = await prisma.cart.create({ data: { userId: req.user!.userId } });
+    cart = await prisma.cart.create({ data: { userId: req.userPayload!.userId } });
   }
 
   // Check if item already in cart
@@ -116,7 +116,7 @@ export const updateCartItem = asyncHandler(async (req: Request, res: Response) =
     include: { cart: true, product: true },
   });
 
-  if (!item || item.cart.userId !== req.user!.userId) {
+  if (!item || item.cart.userId !== req.userPayload!.userId) {
     throw ApiError.notFound('Cart item not found');
   }
 
@@ -146,7 +146,7 @@ export const removeCartItem = asyncHandler(async (req: Request, res: Response) =
     include: { cart: true },
   });
 
-  if (!item || item.cart.userId !== req.user!.userId) {
+  if (!item || item.cart.userId !== req.userPayload!.userId) {
     throw ApiError.notFound('Cart item not found');
   }
 

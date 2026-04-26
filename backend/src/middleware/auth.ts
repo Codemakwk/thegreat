@@ -2,11 +2,11 @@ import { Request, Response, NextFunction } from 'express';
 import { verifyAccessToken, TokenPayload } from '../utils/jwt';
 import { ApiError } from '../utils/apiError';
 
-// Extend Express Request to include user
+// Extend Express Request to include our custom user payload
 declare global {
   namespace Express {
     interface Request {
-      user?: TokenPayload;
+      userPayload?: TokenPayload;
     }
   }
 }
@@ -29,7 +29,7 @@ export const authenticate = (
 
     const token = authHeader.split(' ')[1];
     const decoded = verifyAccessToken(token);
-    req.user = decoded;
+    req.userPayload = decoded;
     next();
   } catch (error: any) {
     if (error instanceof ApiError) {
@@ -57,7 +57,7 @@ export const optionalAuth = (
     const authHeader = req.headers.authorization;
     if (authHeader && authHeader.startsWith('Bearer ')) {
       const token = authHeader.split(' ')[1];
-      req.user = verifyAccessToken(token);
+      req.userPayload = verifyAccessToken(token);
     }
   } catch {
     // Silently ignore invalid tokens for optional auth
