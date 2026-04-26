@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import passport from 'passport';
 import * as authController from '../../controllers/auth.controller';
 import { authenticate } from '../../middleware/auth';
 import { validate } from '../../middleware/validate';
@@ -24,5 +25,13 @@ router.post('/forgot-password', validate({ body: forgotPasswordSchema }), authCo
 router.post('/reset-password', validate({ body: resetPasswordSchema }), authController.resetPassword);
 router.get('/verify-email', authController.verifyEmail);
 router.get('/me', authenticate, authController.getMe);
+
+// Google OAuth routes
+router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+router.get(
+  '/google/callback',
+  passport.authenticate('google', { session: false, failureRedirect: `${process.env.FRONTEND_URL}/login?error=google-failed` }),
+  authController.googleCallback
+);
 
 export default router;

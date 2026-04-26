@@ -17,7 +17,8 @@ import { OrderHistory, OrderDetail } from './pages/Orders';
 import { ProfilePage } from './pages/Profile';
 import { LoginPage } from './pages/Login';
 import { RegisterPage } from './pages/Register';
-import { ForgotPassword, ResetPassword } from './pages/ForgotPassword';
+import { ResetPassword } from './pages/ForgotPassword';
+import { AuthCallbackPage } from './pages/AuthCallback';
 import { NotFound } from './pages/NotFound';
 
 // Admin
@@ -80,6 +81,7 @@ const App: React.FC = () => {
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="/auth/callback" element={<AuthCallbackPage />} />
 
             {/* Protected Routes */}
             <Route element={<ProtectedRoute />}>

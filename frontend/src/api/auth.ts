@@ -23,4 +23,8 @@ export const authApi = {
     client.get(`/auth/verify-email?token=${token}`),
 
   getMe: () => client.get<{ success: boolean; data: User }>('/auth/me'),
+  getMeWithToken: (token: string) =>
+    client.get<{ success: boolean; data: { user: User } }>('/auth/me', {
+      headers: { Authorization: `Bearer ${token}` },
+    }),
 };

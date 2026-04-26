@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import passport from 'passport';
 import prisma from '../config/db';
 import { hashPassword, comparePassword } from '../utils/password';
 import {
@@ -250,4 +251,24 @@ export const getMe = asyncHandler(async (req: Request, res: Response) => {
   }
 
   res.json({ success: true, data: user });
+});
+
+/** Google OAuth Callback */
+export const googleCallback = asyncHandler(async (req: Request, res: Response) => {
+  const user = req.user as any;
+  if (!user) throw ApiError.unauthorized('Google authentication failed');
+
+  const { accessToken, refreshToken: newRefreshToken } = await generateTokens(user.id);
+  
+  // Set refresh token in cookie
+  res.cookie('refreshToken', newRefreshToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+  });
+
+  // Redirect to frontend with access token in URL for initial storage
+  const redirectUrl = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/auth/callback?token=${accessToken}`;
+  res.redirect(redirectUrl);
 });
