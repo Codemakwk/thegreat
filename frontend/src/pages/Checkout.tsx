@@ -174,7 +174,7 @@ export const CheckoutPage: React.FC = () => {
                 {cart.items.map((item) => (
                   <div key={item.id} className="flex items-center gap-4">
                     <img
-                      src={item.product.images?.[0]?.url || 'https://via.placeholder.com/60'}
+                      src={item.product.images?.[0]?.url || 'https://placehold.co/60x60/1e293b/94a3b8?text=No+Image'}
                       alt={item.product.name}
                       className="w-14 h-14 object-cover rounded-lg"
                     />

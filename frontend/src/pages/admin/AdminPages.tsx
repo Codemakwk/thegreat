@@ -274,7 +274,7 @@ export const AdminProducts: React.FC = () => {
                 <tr key={product.id} className="border-b border-surface-100 dark:border-surface-800 hover:bg-surface-50 dark:hover:bg-surface-800/50">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
-                      <img src={product.images?.[0]?.url || 'https://via.placeholder.com/40'} alt="" className="w-10 h-10 rounded-lg object-cover" />
+                      <img src={product.images?.[0]?.url || 'https://placehold.co/40x40/1e293b/94a3b8?text=No+Image'} alt="" className="w-10 h-10 rounded-lg object-cover" />
                       <span className="text-sm font-medium text-surface-900 dark:text-white">{product.name}</span>
                     </div>
                   </td>

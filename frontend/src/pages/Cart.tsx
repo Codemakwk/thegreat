@@ -87,7 +87,7 @@ export const CartPage: React.FC = () => {
               <div key={item.id} className="glass-card p-5 flex gap-5">
                 <Link to={`/products/${item.productId}`} className="shrink-0">
                   <img
-                    src={item.product.images?.[0]?.url || 'https://via.placeholder.com/120'}
+                    src={item.product.images?.[0]?.url || 'https://placehold.co/120x120/1e293b/94a3b8?text=No+Image'}
                     alt={item.product.name}
                     className="w-24 h-24 sm:w-28 sm:h-28 object-cover rounded-xl"
                   />

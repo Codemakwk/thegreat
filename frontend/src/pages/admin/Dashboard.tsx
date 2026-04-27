@@ -115,7 +115,7 @@ export const AdminDashboard: React.FC = () => {
               <div key={idx} className="flex items-center gap-4 py-3 border-b border-surface-200 dark:border-surface-700 last:border-0">
                 <span className="text-lg font-bold text-surface-400 w-6">#{idx + 1}</span>
                 <img
-                  src={item.product?.images?.[0]?.url || 'https://via.placeholder.com/40'}
+                  src={item.product?.images?.[0]?.url || 'https://placehold.co/40x40/1e293b/94a3b8?text=No+Image'}
                   alt={item.product?.name}
                   className="w-10 h-10 object-cover rounded-lg"
                 />

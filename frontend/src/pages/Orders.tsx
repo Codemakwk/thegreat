@@ -61,7 +61,7 @@ export const OrderHistory: React.FC = () => {
                 {order.items.slice(0, 3).map((item) => (
                   <img
                     key={item.id}
-                    src={item.product?.images?.[0]?.url || 'https://via.placeholder.com/60'}
+                    src={item.product?.images?.[0]?.url || 'https://placehold.co/60x60/1e293b/94a3b8?text=No+Image'}
                     alt={item.name}
                     className="w-14 h-14 object-cover rounded-lg border border-surface-200 dark:border-surface-700"
                   />
@@ -146,7 +146,7 @@ export const OrderDetail: React.FC = () => {
               {order.items.map((item) => (
                 <div key={item.id} className="flex items-center gap-4">
                   <img
-                    src={item.product?.images?.[0]?.url || 'https://via.placeholder.com/60'}
+                    src={item.product?.images?.[0]?.url || 'https://placehold.co/60x60/1e293b/94a3b8?text=No+Image'}
                     alt={item.name}
                     className="w-16 h-16 object-cover rounded-lg"
                   />

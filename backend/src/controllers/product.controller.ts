@@ -221,11 +221,11 @@ export const updateProduct = asyncHandler(async (req: Request, res: Response) =>
     where: { id },
     data: {
       ...updateData,
-      images: images ? {
+      images: images && images.length > 0 ? {
         deleteMany: {},
         create: images,
       } : undefined,
-      variants: variants ? {
+      variants: variants && variants.length > 0 ? {
         deleteMany: {},
         create: variants,
       } : undefined,
