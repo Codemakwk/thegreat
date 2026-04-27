@@ -133,7 +133,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData, onSubmit,
       </div>
 
       <div className="flex justify-end gap-3 pt-6 border-t border-surface-200 dark:border-surface-700">
-        <Button type="submit" isLoading={isSubmitting} className="px-8">
+        <Button type="submit" loading={isSubmitting} className="px-8">
           {initialData ? 'Update Product' : 'Create Product'}
         </Button>
       </div>

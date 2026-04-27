@@ -26,7 +26,7 @@ router.patch('/users/:id/ban', adminController.toggleBanUser);
 // Coupons
 router.get('/coupons', adminController.getCoupons);
 router.post('/coupons', validate({ body: couponSchema }), adminController.createCoupon);
-router.put('/coupons/:id', adminController.updateCoupon);
+router.put('/coupons/:id', validate({ body: couponSchema.partial() }), adminController.updateCoupon);
 router.delete('/coupons/:id', adminController.deleteCoupon);
 
 export default router;

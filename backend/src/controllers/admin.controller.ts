@@ -241,14 +241,29 @@ export const getCoupons = asyncHandler(async (_req: Request, res: Response) => {
 
 /** POST /api/v1/admin/coupons */
 export const createCoupon = asyncHandler(async (req: Request, res: Response) => {
-  const coupon = await prisma.coupon.create({ data: req.body });
+  const { code, discountPercent, maxUses, minOrderAmount, active, expiresAt } = req.body;
+  const coupon = await prisma.coupon.create({
+    data: { code, discountPercent, maxUses, minOrderAmount, active, expiresAt: expiresAt ? new Date(expiresAt) : null },
+  });
   res.status(201).json({ success: true, data: coupon });
 });
 
 /** PUT /api/v1/admin/coupons/:id */
 export const updateCoupon = asyncHandler(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const coupon = await prisma.coupon.update({ where: { id }, data: req.body });
+  const { code, discountPercent, maxUses, minOrderAmount, active, expiresAt } = req.body;
+  
+  const coupon = await prisma.coupon.update({
+    where: { id },
+    data: {
+      code,
+      discountPercent,
+      maxUses,
+      minOrderAmount,
+      active,
+      expiresAt: expiresAt ? new Date(expiresAt) : undefined,
+    },
+  });
   res.json({ success: true, data: coupon });
 });
 

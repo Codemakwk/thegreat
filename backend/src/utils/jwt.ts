@@ -1,3 +1,4 @@
+import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 import env from '../config/env';
 
@@ -29,10 +30,5 @@ export function verifyRefreshToken(token: string): TokenPayload {
 
 /** Generate a random token for email verification / password reset */
 export function generateRandomToken(): string {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  let token = '';
-  for (let i = 0; i < 64; i++) {
-    token += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  return token;
+  return crypto.randomBytes(32).toString('hex');
 }

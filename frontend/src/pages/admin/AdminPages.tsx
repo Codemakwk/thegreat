@@ -194,6 +194,9 @@ export const AdminProducts: React.FC = () => {
       toast.success('Product created');
       setIsModalOpen(false);
     },
+    onError: (err: any) => {
+      toast.error(err.response?.data?.message || 'Failed to create product');
+    },
   });
 
   const updateMutation = useMutation({
@@ -204,6 +207,9 @@ export const AdminProducts: React.FC = () => {
       setIsModalOpen(false);
       setEditingProduct(null);
     },
+    onError: (err: any) => {
+      toast.error(err.response?.data?.message || 'Failed to update product');
+    },
   });
 
   const deleteMutation = useMutation({
@@ -211,6 +217,9 @@ export const AdminProducts: React.FC = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['products'] });
       toast.success('Product deleted');
+    },
+    onError: (err: any) => {
+      toast.error(err.response?.data?.message || 'Failed to delete product');
     },
   });
 

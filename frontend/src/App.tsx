@@ -19,6 +19,7 @@ import { LoginPage } from './pages/Login';
 import { RegisterPage } from './pages/Register';
 import { ForgotPassword, ResetPassword } from './pages/ForgotPassword';
 import { AuthCallbackPage } from './pages/AuthCallback';
+import { ContactPage } from './pages/Contact';
 import { NotFound } from './pages/NotFound';
 
 // Admin
@@ -82,6 +83,7 @@ const App: React.FC = () => {
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/auth/callback" element={<AuthCallbackPage />} />
+            <Route path="/contact" element={<ContactPage />} />
 
             {/* Protected Routes */}
             <Route element={<ProtectedRoute />}>
