@@ -42,5 +42,5 @@ export const createProductSchema = z.object({
 export const updateProductSchema = createProductSchema.partial();
 
 export const productIdSchema = z.object({
-  id: z.string().uuid('Invalid product ID'),
+  id: z.string().min(1, 'Product ID or Slug is required'),
 });

@@ -108,19 +108,29 @@ export const getProducts = asyncHandler(async (req: Request, res: Response) => {
   });
 });
 
-/** GET /api/v1/products/:id — Get product by ID */
+/** GET /api/v1/products/:id — Get product by ID or Slug */
 export const getProductById = asyncHandler(async (req: Request, res: Response) => {
   const { id } = req.params;
 
-  // Try cache first
+  // Try cache first (if redis is healthy)
   const cacheKey = `product:${id}`;
-  const cached = await redis.get(cacheKey);
-  if (cached) {
-    return res.json({ success: true, data: JSON.parse(cached) });
+  try {
+    const cached = await redis.get(cacheKey);
+    if (cached) {
+      return res.json({ success: true, data: JSON.parse(cached) });
+    }
+  } catch (error) {
+    console.warn('Redis cache get failed:', error);
   }
 
-  const product = await prisma.product.findUnique({
-    where: { id },
+  // Find by ID or Slug
+  const product = await prisma.product.findFirst({
+    where: {
+      OR: [
+        { id: id.length === 36 ? id : undefined }, // Check if it looks like a UUID
+        { slug: id },
+      ],
+    },
     include: {
       images: { orderBy: { position: 'asc' } },
       category: { select: { id: true, name: true, slug: true } },
@@ -140,8 +150,9 @@ export const getProductById = asyncHandler(async (req: Request, res: Response) =
     throw ApiError.notFound('Product not found');
   }
 
+  // Calculate average rating
   const avgRating = await prisma.review.aggregate({
-    where: { productId: id },
+    where: { productId: product.id },
     _avg: { rating: true },
   });
 
@@ -151,8 +162,12 @@ export const getProductById = asyncHandler(async (req: Request, res: Response) =
     reviewCount: product._count.reviews,
   };
 
-  // Cache for 5 minutes
-  await redis.setex(cacheKey, 300, JSON.stringify(data));
+  // Cache for 5 minutes (non-blocking)
+  try {
+    await redis.setex(cacheKey, 300, JSON.stringify(data));
+  } catch (error) {
+    console.warn('Redis cache set failed:', error);
+  }
 
   res.json({ success: true, data });
 });
