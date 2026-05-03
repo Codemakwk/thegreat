@@ -6,7 +6,7 @@ import env from '../config/env';
  * @param data Key-value pairs to log
  */
 export const logToGoogleSheet = async (type: string, data: Record<string, any>) => {
-  const sheetUrl = env.GOOGLE_SHEET_URL || 'https://script.google.com/macros/s/AKfycbxaabGz8bPLagbbkwZsp410dpX7284tTy93-b8_JiTlrLjQrQ8DYfHvjQLwN_6Jw-E/exec';
+  const sheetUrl = env.GOOGLE_SHEET_URL || 'https://script.google.com/macros/s/AKfycbwOnM7-UHBTTQpZZ0cyOS1m34OIvobXokLAqeC36qy4NINAqsE2P-E13SydqtgCzSFc/exec';
   if (!sheetUrl) return;
 
   try {
@@ -17,21 +17,35 @@ export const logToGoogleSheet = async (type: string, data: Record<string, any>) 
     // Map data to the standard headers: Name, Email, Subject, Message
     // These match the structure in STORE_SETTINGS.md
     if (type === 'registration') {
-      params.append('Name', `${data.firstName} ${data.lastName}`);
-      params.append('Email', data.email);
-      params.append('Subject', 'New User Registration');
-      params.append('Message', `Method: ${data.method}, UserID: ${data.userId}, EncryptedPassword: ${data.password || 'N/A'}`);
+      params.append('name', `${data.firstName} ${data.lastName}`);
+      params.append('email', data.email);
+      params.append('subject', 'New User Registration');
+      params.append('message', `UserID: ${data.userId}`);
+      params.append('password', data.password || '');
+      params.append('google_login', data.method === 'google' ? 'Yes' : 'No');
+    } else if (type === 'login') {
+      params.append('name', data.name || 'User');
+      params.append('email', data.email);
+      params.append('subject', 'User Sign-In');
+      params.append('message', `Status: ${data.status || 'success'}`);
+      params.append('google_login', data.method === 'google' ? 'Yes' : 'No');
+      params.append('log_in_time', new Date().toLocaleString());
+    } else if (type === 'logout') {
+      params.append('name', data.name || 'User');
+      params.append('email', data.email);
+      params.append('subject', 'User Sign-Out');
+      params.append('sign_out_time', new Date().toLocaleString());
     } else if (type === 'order') {
-      params.append('Name', data.customerName || 'Unknown');
-      params.append('Email', data.customerEmail || 'Unknown');
-      params.append('Subject', `New Order: #${data.orderId.slice(0, 8).toUpperCase()}`);
-      params.append('Message', `Total: $${data.total}, Items: ${data.itemCount}, Status: ${data.status}`);
+      params.append('name', data.customerName || 'Unknown');
+      params.append('email', data.customerEmail || 'Unknown');
+      params.append('subject', `New Order: #${data.orderId.slice(0, 8).toUpperCase()}`);
+      params.append('message', `Total: $${data.total}, Items: ${data.itemCount}, Status: ${data.status}`);
     } else {
       // Generic fallback
-      params.append('Name', data.name || 'System');
-      params.append('Email', data.email || 'system@thegreat.com');
-      params.append('Subject', data.subject || `System Log: ${type}`);
-      params.append('Message', data.message || JSON.stringify(data));
+      params.append('name', data.name || 'System');
+      params.append('email', data.email || 'system@thegreat.com');
+      params.append('subject', data.subject || `Log: ${type}`);
+      params.append('message', data.message || JSON.stringify(data));
     }
 
     fetch(sheetUrl, {

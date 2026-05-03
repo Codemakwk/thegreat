@@ -147,6 +147,12 @@ export const logout = asyncHandler(async (req: Request, res: Response) => {
       where: { id: req.userPayload.userId },
       data: { refreshToken: null },
     });
+
+    // Log to Google Sheets (Sign-out event)
+    logToGoogleSheet('logout', {
+      userId: req.userPayload.userId,
+      message: `User signed out. ID: ${req.userPayload.userId}`,
+    });
   }
 
   res.json({ success: true, message: 'Logged out successfully' });

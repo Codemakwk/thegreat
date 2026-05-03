@@ -22,9 +22,9 @@ export const Footer: React.FC = () => {
       const params = new URLSearchParams();
       params.append('timestamp', new Date().toLocaleString());
       params.append('type', 'newsletter');
-      params.append('Email', email);
-      params.append('Subject', 'Newsletter Subscription');
-      params.append('Message', `User subscribed to newsletter: ${email}`);
+      params.append('email', email);
+      params.append('subject', 'Newsletter Subscription');
+      params.append('message', `User subscribed to newsletter: ${email}`);
 
       await fetch(GOOGLE_SHEET_URL, {
         method: 'POST',

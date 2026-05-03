@@ -9,7 +9,7 @@ import toast from 'react-hot-toast';
 import type { Order } from '../../types';
 import { Modal } from '../../components/ui/Modal';
 import { ProductForm } from './components/ProductForm';
-import { Trash2, Edit } from 'lucide-react';
+import { Trash2, Edit, Search } from 'lucide-react';
 
 const statusColors: Record<string, 'default' | 'success' | 'warning' | 'danger' | 'info'> = {
   PENDING: 'warning', PROCESSING: 'info', SHIPPED: 'info', DELIVERED: 'success', CANCELLED: 'danger', REFUNDED: 'default',
