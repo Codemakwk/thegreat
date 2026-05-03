@@ -27,4 +27,5 @@ export const authApi = {
     client.get<{ success: boolean; data: { user: User } }>('/auth/me', {
       headers: { Authorization: `Bearer ${token}` },
     }),
+  getProfileStats: () => client.get('/profile/stats'),
 };

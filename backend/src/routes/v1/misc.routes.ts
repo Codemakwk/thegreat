@@ -18,5 +18,6 @@ router.delete('/addresses/:id', authenticate, miscController.deleteAddress);
 
 // ─── Profile ─────────────────────────────────────────────────────
 router.put('/profile', authenticate, miscController.updateProfile);
+router.get('/profile/stats', authenticate, miscController.getProfileStats);
 
 export default router;

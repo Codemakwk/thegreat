@@ -149,3 +149,35 @@ export const updateProfile = asyncHandler(async (req: Request, res: Response) =>
 
   res.json({ success: true, data: user });
 });
+
+/** GET /api/v1/profile/stats — Get user profile stats and recent orders */
+export const getProfileStats = asyncHandler(async (req: Request, res: Response) => {
+  const userId = req.userPayload!.userId;
+
+  const [orderCount, totalSpent, recentOrders] = await Promise.all([
+    prisma.order.count({ where: { userId } }),
+    prisma.order.aggregate({
+      where: { userId, status: { notIn: ['CANCELLED', 'REFUNDED'] } },
+      _sum: { total: true },
+    }),
+    prisma.order.findMany({
+      where: { userId },
+      orderBy: { createdAt: 'desc' },
+      take: 3,
+      include: {
+        items: {
+          include: { product: { include: { images: true } } },
+        },
+      },
+    }),
+  ]);
+
+  res.json({
+    success: true,
+    data: {
+      orderCount,
+      totalSpent: totalSpent._sum.total || 0,
+      recentOrders,
+    },
+  });
+});

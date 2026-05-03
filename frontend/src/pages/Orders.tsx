@@ -88,6 +88,7 @@ export const OrderHistory: React.FC = () => {
 /* ─── Order Detail (also used for confirmation) ────────────────── */
 
 import { useParams } from 'react-router-dom';
+import { API_BASE_URL } from '../api/client';
 
 export const OrderDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -127,7 +128,7 @@ export const OrderDetail: React.FC = () => {
 
       <div className="mb-6 flex justify-end">
         <a 
-          href={`http://localhost:3001/api/v1/orders/${order.id}/receipt`}
+          href={`${API_BASE_URL}/orders/${order.id}/receipt`}
           target="_blank"
           rel="noopener noreferrer"
         >
