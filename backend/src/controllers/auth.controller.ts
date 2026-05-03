@@ -15,7 +15,8 @@ import { verificationEmail, resetPasswordEmail } from '../utils/emailTemplates';
 
 /** POST /api/v1/auth/register */
 export const register = asyncHandler(async (req: Request, res: Response) => {
-  const { email, password, firstName, lastName } = req.body;
+  const { password, firstName, lastName } = req.body;
+  const email = req.body.email.toLowerCase();
 
   // Check if user already exists
   const existing = await prisma.user.findUnique({ where: { email } });
@@ -41,11 +42,16 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
   await prisma.cart.create({ data: { userId: user.id } });
 
   // Send verification email
-  await sendEmail({
-    to: email,
-    subject: 'Verify your email — TheGreat Store',
-    html: verificationEmail(firstName, verifyToken),
-  });
+  try {
+    await sendEmail({
+      to: email,
+      subject: 'Verify your email — TheGreat Store',
+      html: verificationEmail(firstName, verifyToken),
+    });
+  } catch (error) {
+    console.error('Failed to send verification email:', error);
+    // Continue anyway so user is not blocked, but log it
+  }
 
   res.status(201).json({
     success: true,
@@ -55,7 +61,8 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
 
 /** POST /api/v1/auth/login */
 export const login = asyncHandler(async (req: Request, res: Response) => {
-  const { email, password } = req.body;
+  const { password } = req.body;
+  const email = req.body.email.toLowerCase();
 
   const user = await prisma.user.findUnique({ where: { email } });
   if (!user) {
@@ -64,6 +71,11 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
 
   if (user.banned) {
     throw ApiError.forbidden('Your account has been suspended');
+  }
+
+  // Check if it's an OAuth user trying to log in with password
+  if (!user.password) {
+    throw ApiError.unauthorized('This account uses Google Login. Please sign in with Google.');
   }
 
   const isValidPassword = await comparePassword(password, user.password);
@@ -80,6 +92,14 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
   await prisma.user.update({
     where: { id: user.id },
     data: { refreshToken },
+  });
+
+  // Set refresh token in cookie for consistency and security
+  res.cookie('refreshToken', refreshToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
   });
 
   res.json({
@@ -143,7 +163,7 @@ export const refreshAccessToken = asyncHandler(async (req: Request, res: Respons
 
 /** POST /api/v1/auth/forgot-password */
 export const forgotPassword = asyncHandler(async (req: Request, res: Response) => {
-  const { email } = req.body;
+  const email = req.body.email.toLowerCase();
 
   const user = await prisma.user.findUnique({ where: { email } });
 
