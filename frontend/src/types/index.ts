@@ -34,6 +34,7 @@ export interface Product {
   category: Category;
   images: ProductImage[];
   variants: ProductVariant[];
+  reviews: Review[];
   avgRating: number;
   reviewCount: number;
   createdAt: string;
