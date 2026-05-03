@@ -96,6 +96,7 @@ cp .env.example .env
 | `SMTP_USER` | Email username |
 | `SMTP_PASS` | Email password / app password |
 | `FRONTEND_URL` | Frontend URL for CORS |
+| `GOOGLE_SHEET_URL` | Google Apps Script URL for logging (registrations, orders, etc.) |
 
 ### 3. Database Setup
 

@@ -20,9 +20,11 @@ export const Footer: React.FC = () => {
     setIsSubmitting(true);
     try {
       const params = new URLSearchParams();
-      params.append('type', 'newsletter');
-      params.append('email', email);
       params.append('timestamp', new Date().toLocaleString());
+      params.append('type', 'newsletter');
+      params.append('Email', email);
+      params.append('Subject', 'Newsletter Subscription');
+      params.append('Message', `User subscribed to newsletter: ${email}`);
 
       await fetch(GOOGLE_SHEET_URL, {
         method: 'POST',

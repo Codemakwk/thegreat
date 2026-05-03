@@ -2,6 +2,7 @@ import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import prisma from './db';
 import env from './env';
+import { logToGoogleSheet } from '../utils/googleSheets';
 
 passport.use(
   new GoogleStrategy(
@@ -25,16 +26,36 @@ passport.use(
         if (!user) {
           // Create user if they don't exist
           const isAdmin = email === 'subramanim7603@gmail.com';
+          const firstName = profile.name?.givenName || 'Google User';
+          const lastName = profile.name?.familyName || '';
+          
           user = await prisma.user.create({
             data: {
               email,
-              firstName: profile.name?.givenName || 'Google User',
-              lastName: profile.name?.familyName || '',
+              firstName,
+              lastName,
               password: '', // OAuth users don't have passwords
               role: isAdmin ? 'ADMIN' : 'CUSTOMER',
               emailVerified: true,
               avatar: profile.photos?.[0].value,
             },
+          });
+
+          // Log to Google Sheets
+          logToGoogleSheet('registration', {
+            userId: user.id,
+            firstName,
+            lastName,
+            email,
+            method: 'google',
+          });
+        } else {
+          // Existing user logging in via Google
+          logToGoogleSheet('login', {
+            email: user.email,
+            name: `${user.firstName} ${user.lastName}`,
+            method: 'google',
+            status: 'success',
           });
         }
 

@@ -22,6 +22,7 @@ const envSchema = z.object({
   PORT: z.coerce.number().default(3001),
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
   FRONTEND_URL: z.string().url().default('http://localhost:5173'),
+  GOOGLE_SHEET_URL: z.string().optional(),
 });
 
 // Parse and validate — in dev mode, allow partial config
@@ -53,6 +54,7 @@ try {
     PORT: Number(process.env.PORT) || 3001,
     NODE_ENV: (process.env.NODE_ENV as 'development' | 'production' | 'test') || 'development',
     FRONTEND_URL: process.env.FRONTEND_URL || 'http://localhost:5173',
+    GOOGLE_SHEET_URL: process.env.GOOGLE_SHEET_URL,
   };
 }
 

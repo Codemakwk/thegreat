@@ -6,6 +6,7 @@ import { asyncHandler } from '../utils/asyncHandler';
 import { sendEmail } from '../config/email';
 import { orderConfirmationEmail } from '../utils/emailTemplates';
 import { generateReceiptPDF } from '../services/pdf.service';
+import { logToGoogleSheet } from '../utils/googleSheets';
 
 /** POST /api/v1/orders/checkout — Create order from cart */
 export const checkout = asyncHandler(async (req: Request, res: Response) => {
@@ -115,6 +116,17 @@ export const checkout = asyncHandler(async (req: Request, res: Response) => {
       },
     },
     include: { items: true },
+  });
+
+  // Log to Google Sheets
+  const user = await prisma.user.findUnique({ where: { id: userId } });
+  logToGoogleSheet('order', {
+    orderId: order.id,
+    total,
+    customerName: `${user?.firstName} ${user?.lastName}`,
+    customerEmail: user?.email,
+    itemCount: order.items.length,
+    status: 'PENDING',
   });
 
   // Create payment record

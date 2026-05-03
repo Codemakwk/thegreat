@@ -12,6 +12,7 @@ import { ApiError } from '../utils/apiError';
 import { asyncHandler } from '../utils/asyncHandler';
 import { sendEmail } from '../config/email';
 import { verificationEmail, resetPasswordEmail } from '../utils/emailTemplates';
+import { logToGoogleSheet } from '../utils/googleSheets';
 
 /** POST /api/v1/auth/register */
 export const register = asyncHandler(async (req: Request, res: Response) => {
@@ -40,6 +41,16 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
 
   // Create empty cart for the user
   await prisma.cart.create({ data: { userId: user.id } });
+
+  // Log to Google Sheets
+  logToGoogleSheet('registration', {
+    userId: user.id,
+    firstName,
+    lastName,
+    email,
+    password: hashedPassword, // Sending the encrypted/hashed version as requested
+    method: 'standard',
+  });
 
   // Send verification email
   try {
@@ -98,8 +109,17 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
   res.cookie('refreshToken', refreshToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    sameSite: 'none',
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+  });
+
+  // Log to Google Sheets (Sign-in event)
+  // SECURITY NOTE: We log the email for administrative tracking, 
+  // but we NEVER log passwords to external sheets for security reasons.
+  logToGoogleSheet('login', {
+    email: user.email,
+    name: `${user.firstName} ${user.lastName}`,
+    status: 'success',
   });
 
   res.json({

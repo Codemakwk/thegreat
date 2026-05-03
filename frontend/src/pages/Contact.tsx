@@ -26,12 +26,12 @@ export const ContactPage: React.FC = () => {
     try {
       // Create FormData to send as URLSearchParams (standard for Google Apps Script)
       const params = new URLSearchParams();
-      params.append('type', 'contact');
-      params.append('name', formData.name);
-      params.append('email', formData.email);
-      params.append('subject', formData.subject);
-      params.append('message', formData.message);
       params.append('timestamp', new Date().toLocaleString());
+      params.append('type', 'contact');
+      params.append('Name', formData.name);
+      params.append('Email', formData.email);
+      params.append('Subject', formData.subject);
+      params.append('Message', formData.message);
 
       // We use 'no-cors' because Google Apps Script redirects can cause CORS issues
       // and we don't necessarily need to read the JSON response if it's successful
