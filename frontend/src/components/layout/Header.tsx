@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ShoppingCart, User, Search, Moon, Sun, Menu, X, LogOut, Package, LayoutDashboard } from 'lucide-react';
+import { authApi } from '../../api/auth';
 import { useAuthStore } from '../../store/authStore';
 import { useCartStore } from '../../store/cartStore';
 import { useThemeStore } from '../../store/themeStore';
@@ -23,7 +24,12 @@ export const Header: React.FC = () => {
     }
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    try {
+      await authApi.logout();
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
     logout();
     setUserMenuOpen(false);
     navigate('/');

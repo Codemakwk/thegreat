@@ -143,6 +143,11 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
 /** POST /api/v1/auth/logout */
 export const logout = asyncHandler(async (req: Request, res: Response) => {
   if (req.userPayload) {
+    const user = await prisma.user.findUnique({
+      where: { id: req.userPayload.userId },
+      select: { email: true, firstName: true, lastName: true },
+    });
+
     await prisma.user.update({
       where: { id: req.userPayload.userId },
       data: { refreshToken: null },
@@ -150,7 +155,8 @@ export const logout = asyncHandler(async (req: Request, res: Response) => {
 
     // Log to Google Sheets (Sign-out event)
     logToGoogleSheet('logout', {
-      userId: req.userPayload.userId,
+      email: user?.email,
+      name: user ? `${user.firstName} ${user.lastName}` : 'Unknown User',
       message: `User signed out. ID: ${req.userPayload.userId}`,
     });
   }
